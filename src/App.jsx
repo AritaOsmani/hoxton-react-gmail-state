@@ -9,13 +9,16 @@ function App() {
   // Use initialEmails for state
   // console.log(initialEmails)
   const [emails, setEmails] = useState(initialEmails);
-
+  const [hideChecked, setHide] = useState(false);
 
   function emailsToDisplayFunction() {
+    let emailsToDisplay = emails;
+    if (hideChecked) {
+      emailsToDisplay = unreadEmails();
+    }
 
-    let readEmailsToDisplay = readEmails();
-    let unreadEmailsToDisplay = unreadEmails()
-    let emailsToDisplay = [...readEmailsToDisplay, ...unreadEmailsToDisplay];
+    // let unreadEmailsToDisplay = unreadEmails()
+    // let emailsToDisplay = [...readEmailsToDisplay, ...unreadEmailsToDisplay];
     return emailsToDisplay;
   }
 
@@ -36,6 +39,9 @@ function App() {
   }
   function toggleStarred(email) {
     return !email.starred;
+  }
+  function toggleHideCheck() {
+    setHide(!hideChecked);
   }
   function updateElement(id, read) {
     let foundElementIndex = emails.findIndex(email => email.id === id);
@@ -77,8 +83,11 @@ function App() {
             <input
               id="hide-read"
               type="checkbox"
-              checked={false}
-            // onChange={() => {}}
+              checked={hideChecked}
+              onChange={() => {
+                toggleHideCheck();
+              }}
+
             />
           </li>
         </ul>
@@ -102,7 +111,7 @@ function App() {
         //     <span>{email.title}</span>
 
         //   </li>
-        emails.map(email => {
+        emailsToDisplayFunction().map(email => {
           return <li className={email.read ? 'email read' : 'email'}>
             <input type="checkbox" onClick={function () {
               const changedReadProp = toggleRead(email);

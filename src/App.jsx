@@ -39,7 +39,8 @@ function App() {
   }
   function updateElement(id, read) {
     let foundElementIndex = emails.findIndex(email => email.id === id);
-    const newEmails = [...emails, emails[foundElementIndex].read = read]
+    emails[foundElementIndex].read = read;
+    const newEmails = [...emails]
     // setEmails(newEmails);
     return newEmails
   }
@@ -47,7 +48,8 @@ function App() {
 
   function updateStarred(id, starred) {
     let foundElementIndex = emails.findIndex(email => email.id === id);
-    const newEmails = [...emails, emails[foundElementIndex].starred = starred]
+    emails[foundElementIndex].starred = starred;
+    const newEmails = [...emails]
     setEmails(newEmails);
   }
   return (
@@ -82,14 +84,30 @@ function App() {
         </ul>
       </nav>
       <main className="emails">{
-        emailsToDisplayFunction().map(email => {
+        // emailsToDisplayFunction().map(email => {
 
+        //   return <li className={email.read ? 'email read' : 'email'}>
+        //     <input type="checkbox" onClick={function () {
+        //       const changedReadProp = toggleRead(email);
+        //       const newEmails = updateElement(email.id, changedReadProp)
+        //       setEmails(newEmails)
+
+        //     }}
+        //       checked={email.read} />
+        //     <input type='checkbox' class="star-checkbox" onClick={function () {
+        //       const changedStarredProp = toggleStarred(email);
+        //       updateStarred(email.id, changedStarredProp);
+        //     }} />
+        //     <span>{email.sender}</span>
+        //     <span>{email.title}</span>
+
+        //   </li>
+        emails.map(email => {
           return <li className={email.read ? 'email read' : 'email'}>
             <input type="checkbox" onClick={function () {
               const changedReadProp = toggleRead(email);
               const newEmails = updateElement(email.id, changedReadProp)
               setEmails(newEmails)
-
             }}
               checked={email.read} />
             <input type='checkbox' class="star-checkbox" onClick={function () {
@@ -98,22 +116,9 @@ function App() {
             }} />
             <span>{email.sender}</span>
             <span>{email.title}</span>
-
           </li>
-          // emails.map(email => {
-          //   return <li className={email.read ? 'email read' : 'email'}>
-          //     <input type="checkbox" onClick={function () {
-          //       const changedReadProp = toggleRead(email);
-          //       const newEmails = updateElement(email.id, changedReadProp)
-          //       setEmails(newEmails)
-          //     }}
-          //       checked={email.read} />
-          //     <i class="star-checkbox"></i>
-          //     <span>{email.sender}</span>
-          //     <span>{email.title}</span>
-          //   </li>
-          // })
         })
+        // })
       }
       </main>
     </div>

@@ -11,9 +11,12 @@ function App() {
   const [emails, setEmails] = useState(initialEmails);
   const [hideChecked, setHide] = useState(false);
   const [currentTab, setTab] = useState('home');
+  const [countUnread, setUnreadCounter] = useState(getUnreadCount());
+  const [countStarred, setStarredCounter] = useState(getStarredCount());
 
   function emailsToDisplayFunction() {
     let emailsToDisplay = emails;
+
     if (hideChecked) {
       emailsToDisplay = unreadEmails();
     }
@@ -22,6 +25,7 @@ function App() {
     }
     if (currentTab === 'starred') {
       emailsToDisplay = starredEmails();
+
     }
     // let unreadEmailsToDisplay = unreadEmails()
     // let emailsToDisplay = [...readEmailsToDisplay, ...unreadEmailsToDisplay];
@@ -69,6 +73,22 @@ function App() {
     const newEmails = [...emails]
     setEmails(newEmails);
   }
+  function updateStarredCount() {
+    let starredCount = getStarredCount()
+    setStarredCounter(starredCount);
+  }
+  function getStarredCount() {
+    let starred = starredEmails();
+    return starred.length;
+  }
+  function getUnreadCount() {
+    let unread = unreadEmails();
+    return unread.length;
+  }
+  function updateUnreadCounter() {
+    let unreadCount = getUnreadCount();
+    setUnreadCounter(unreadCount);
+  }
   return (
     <div className="app">
       <Header />
@@ -78,19 +98,21 @@ function App() {
             className="item active"
             onClick={() => {
               setTab('inbox');
+
             }}
           >
             <span className="label">Inbox</span>
-            <span className="count">?</span>
+            <span className="count">{countUnread}</span>
           </li>
           <li
             className="item"
             onClick={() => {
               setTab('starred');
+
             }}
           >
             <span className="label">Starred</span>
-            <span className="count">?</span>
+            <span className="count">{countStarred}</span>
           </li>
 
           <li className="item toggle">
@@ -132,11 +154,13 @@ function App() {
               const changedReadProp = toggleRead(email);
               const newEmails = updateElement(email.id, changedReadProp)
               setEmails(newEmails)
+              updateUnreadCounter();
             }}
               checked={email.read} />
             <input type='checkbox' class="star-checkbox" onClick={function () {
               const changedStarredProp = toggleStarred(email);
               updateStarred(email.id, changedStarredProp);
+              updateStarredCount()
             }}
               checked={email.starred} />
             <span>{email.sender}</span>

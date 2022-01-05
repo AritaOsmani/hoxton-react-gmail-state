@@ -10,13 +10,19 @@ function App() {
   // console.log(initialEmails)
   const [emails, setEmails] = useState(initialEmails);
   const [hideChecked, setHide] = useState(false);
+  const [currentTab, setTab] = useState('home');
 
   function emailsToDisplayFunction() {
     let emailsToDisplay = emails;
     if (hideChecked) {
       emailsToDisplay = unreadEmails();
     }
-
+    if (currentTab === 'inbox') {
+      emailsToDisplay = unreadEmails();
+    }
+    if (currentTab === 'starred') {
+      emailsToDisplay = starredEmails();
+    }
     // let unreadEmailsToDisplay = unreadEmails()
     // let emailsToDisplay = [...readEmailsToDisplay, ...unreadEmailsToDisplay];
     return emailsToDisplay;
@@ -31,6 +37,11 @@ function App() {
   function unreadEmails() {
     return emails.filter(email => {
       return email.read === false;
+    })
+  }
+  function starredEmails() {
+    return emails.filter(email => {
+      return email.starred;
     })
   }
 
@@ -65,14 +76,18 @@ function App() {
         <ul className="inbox-list">
           <li
             className="item active"
-          // onClick={() => {}}
+            onClick={() => {
+              setTab('inbox');
+            }}
           >
             <span className="label">Inbox</span>
             <span className="count">?</span>
           </li>
           <li
             className="item"
-          // onClick={() => {}}
+            onClick={() => {
+              setTab('starred');
+            }}
           >
             <span className="label">Starred</span>
             <span className="count">?</span>
@@ -122,7 +137,8 @@ function App() {
             <input type='checkbox' class="star-checkbox" onClick={function () {
               const changedStarredProp = toggleStarred(email);
               updateStarred(email.id, changedStarredProp);
-            }} />
+            }}
+              checked={email.starred} />
             <span>{email.sender}</span>
             <span>{email.title}</span>
           </li>
